@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import authRouter from './routes/authRoutes.js'
 import chatRouter from './routes/chatRoutes.js'
+import { authMiddleware } from "./middleware/authMiddleware.js";
 const app = express();
 const port = process.env.PORT || 5101;
 
@@ -10,16 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 // router
 app.use('/api/v1',authRouter)
-app.use('/api/v1',chatRouter)
-
-
-
-
-
-
-
-
-
+app.use('/api/v1',authMiddleware,chatRouter)
 
 const start = async () => {
   try {

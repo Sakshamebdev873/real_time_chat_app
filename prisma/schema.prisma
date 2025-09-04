@@ -34,6 +34,7 @@ model Group {
   createdAt DateTime    @default(now())
   users     GroupUser[]
   messages  Message[]
+  isDeleted Boolean @default(false)
 }
 
 model GroupUser {
@@ -57,6 +58,7 @@ model Message {
   groupId      Int?
   group        Group?        @relation(fields: [groupId], references: [id])
   readReceipts MessageRead[]
+isDeleted      Boolean @default(false)
 }
 
 model MessageRead {

@@ -7,17 +7,24 @@ export const getChat = async (req, res) => {
     const otherUserId = parseInt(req.params.userId);
     if (isNaN(otherUserId))
         return res.status(400).json({ msg: "Invalid userId" });
-    const messages = await prisma.message.findMany({
-        where: {
-            OR: [
-                { senderId: userId, receiverId: otherUserId },
-                { senderId: otherUserId, receiverId: userId },
-            ],
-        },
-        orderBy: { createdAt: "asc" },
-    });
-    if (messages.length === 0) {
-        return res.status(400).json({ msg: "No messages found....." });
+    try {
+        const messages = await prisma.message.findMany({
+            where: {
+                OR: [
+                    { senderId: userId, receiverId: otherUserId },
+                    { senderId: otherUserId, receiverId: userId },
+                ],
+            },
+            orderBy: { createdAt: "asc" },
+        });
+        if (messages.length === 0) {
+            return res.status(400).json({ msg: "No messages found....." });
+        }
+        res.status(200).json({ msg: messages });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Something went wrong" });
     }
 };
 export const sendMessage = async (req, res) => {
