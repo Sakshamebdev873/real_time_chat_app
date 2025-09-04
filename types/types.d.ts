@@ -6,3 +6,6 @@ declare module "express-serve-static-core" {
     userId?: number | string;
   }
 }
+export interface AuthRequest extends Request {
+  userId?: number; // added by auth middleware
+}

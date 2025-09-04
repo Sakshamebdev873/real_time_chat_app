@@ -43,6 +43,7 @@ model GroupUser {
   role    GroupRole @default(MEMBER)
   user    User      @relation(fields: [userId], references: [id])
   group   Group     @relation(fields: [groupId], references: [id])
+  @@unique([userId, groupId])
 }
 
 model Message {
