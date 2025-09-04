@@ -4,7 +4,6 @@ import type { AuthRequest } from "../types/types.js";
 
 const prisma = new PrismaClient();
 
-
 export const getChat = async (req: AuthRequest, res: Response) => {
   const userId = req.userId;
   if (!userId) return res.status(400).json({ msg: "UserId not found" });
@@ -13,26 +12,25 @@ export const getChat = async (req: AuthRequest, res: Response) => {
   if (isNaN(otherUserId))
     return res.status(400).json({ msg: "Invalid userId" });
 
- try {
-   const messages = await prisma.message.findMany({
-    where: {
-      OR: [
-        { senderId: userId, receiverId: otherUserId },
-        { senderId: otherUserId, receiverId: userId },
-      ],
-    },
-    orderBy: { createdAt: "asc" },
-  });
-  if (messages.length === 0) {
-    return res.status(400).json({ msg: "No messages found....." });
+  try {
+    const messages = await prisma.message.findMany({
+      where: {
+        OR: [
+          { senderId: userId, receiverId: otherUserId },
+          { senderId: otherUserId, receiverId: userId },
+        ],
+      },
+      orderBy: { createdAt: "asc" },
+    });
+    if (messages.length === 0) {
+      return res.status(400).json({ msg: "No messages found....." });
+    }
+    res.status(200).json({ msg: messages });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ msg: "Something went wrong" });
   }
-  res.status(200).json({msg : messages})
- } catch (error : any) {
-  console.log(error);
-  res.status(500).json({msg : "Something went wrong"})
- }
 };
-
 
 export const sendMessage = async (req: Request, res: Response) => {
   const senderId = req.userId;
@@ -46,7 +44,6 @@ export const sendMessage = async (req: Request, res: Response) => {
   });
   res.status(201).json({ message });
 };
-
 
 export const getGroupMessages = async (req: Request, res: Response) => {
   const groupId = parseInt(req.params.groupId as string);
@@ -66,14 +63,14 @@ export const sendGroupMessages = async (req: Request, res: Response) => {
   const senderId = parseInt(req.userId as string);
   const { content } = req.body;
   try {
-   const memberShip = await prisma.groupUser.findUnique({
-  where: {
-    userId_groupId: {
-      userId: senderId,
-      groupId,
-    },
-  },
-});
+    const memberShip = await prisma.groupUser.findUnique({
+      where: {
+        userId_groupId: {
+          userId: senderId,
+          groupId,
+        },
+      },
+    });
 
     if (!memberShip) {
       return res.status(403).json({ error: "Not a member" });
@@ -89,5 +86,122 @@ export const sendGroupMessages = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ msg: "Something went Wrong", error });
+  }
+};
+
+export const createGroup = async (req: AuthRequest, res: Response) => {
+  const { name, description, memberIds } = req.body;
+  const creatorId = req.userId!;
+  try {
+    const group = await prisma.group.create({
+      data: {
+        name,
+        description,
+        users: {
+          create: [
+            { userId: creatorId, role: "ADMIN" },
+            ...memberIds.map((id: number) => ({ userId: id, role: "MEMBER" })),
+          ],
+        },
+      },
+      include: { users: true },
+    });
+    res.status(201).json({ group: group });
+  } catch (error: any) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ msg: "Something went wrong. Failed to create group" });
+  }
+};
+export const deleteGroup = async (req: AuthRequest, res: Response) => {
+  const groupId = parseInt(req.params.groupId as string);
+  const userId = req.userId!;
+  try {
+    const memberShip = await prisma.groupUser.findFirst({
+      where: { groupId, userId },
+    });
+    if (!memberShip || memberShip.role !== "ADMIN") {
+      return res.status(403).json({ error: "Only admins can delete groups" });
+    }
+    await prisma.group.update({
+      where: { id: groupId },
+      data: { isDeleted: true },
+    });
+    res.status(200).json({ msg: "Group deleted Successfully" });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to delete group" });
+  }
+};
+export const deleteMessage = async (req: AuthRequest, res: Response) => {
+  const messageId = parseInt(req.params.messageId as string);
+  const userId = req.userId!;
+  try {
+    const message = await prisma.message.findUnique({
+      where: { id: messageId },
+    });
+    if (!message) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+    await prisma.message.update({
+      where: { id: messageId },
+      data: { isDeleted: true },
+    });
+    res.status(200).json({ msg: "Message" });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete message" });
+  }
+};
+export const addUserToGroup = async (req: AuthRequest, res: Response) => {
+  const groupId = parseInt(req.params.groupId as string);
+  const { userIdtoAdd } = req.body;
+  const userId = req.userId!;
+  try {
+    const memberShip = await prisma.groupUser.findFirst({
+      where: { groupId, userId },
+    });
+    if (!memberShip || memberShip.role !== "ADMIN") {
+      return res.status(403).json({ error: "Only admins can add members" });
+    }
+    const newMember = await prisma.groupUser.create({
+      data: { groupId, userId: userIdtoAdd, role: "MEMBER" },
+    });
+    res.status(201).json({ newMember });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to add user to group" });
+  }
+};
+export const removeUserFromGroup = async (req: AuthRequest, res: Response) => {
+  const groupId = parseInt(req.params.groupId as string);
+  const userId = req.userId!;
+  const userIdtoRemove = parseInt(req.params.userId as string);
+  try {
+    const memberShip = await prisma.groupUser.findFirst({
+      where: { groupId, userId },
+    });
+    if (!memberShip || memberShip.role !== "ADMIN") {
+      return res.status(403).json({ error: "Only admins can remove members" });
+    }
+    await prisma.groupUser.deleteMany({
+      where: { groupId, userId: userIdtoRemove },
+    });
+    res.status(200).json({ msg: "User removed from group" });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to remove user" });
+  }
+};
+export const leaveGroup = async (req: AuthRequest, res: Response) => {
+  const groupId = parseInt(req.params.groupId as string);
+  const userId = req.userId!;
+  try {
+    await prisma.groupUser.deleteMany({ where: { groupId, userId } });
+    res.status(200).json({ msg: "You left the group" });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to leave group" });
   }
 };

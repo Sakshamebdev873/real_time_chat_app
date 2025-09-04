@@ -32,6 +32,7 @@ model Group {
   id        Int         @id @default(autoincrement())
   name      String
   createdAt DateTime    @default(now())
+  description String
   users     GroupUser[]
   messages  Message[]
   isDeleted Boolean @default(false)
