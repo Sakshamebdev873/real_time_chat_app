@@ -205,3 +205,45 @@ export const leaveGroup = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Failed to leave group" });
   }
 };
+export const changeUserRole = async (req:AuthRequest,res : Response) =>{
+  const groupId = parseInt(req.params.groupId as string)
+  const userId = req.userId!
+  const targetUserId = parseInt(req.params.userId as string)
+  const {role} = req.body
+  try {
+    const memberShip = await prisma.groupUser.findFirst({where : {groupId,userId}})
+  if(!memberShip || memberShip.role !== "ADMIN"){
+    return res.status(403).json({error : "Only admins can change roles"})
+  }
+  const updated = await prisma.groupUser.updateMany({
+    where : {groupId,userId : targetUserId},
+    data : {role}
+  })
+  res.status(200).json({msg : "User role updated",updated})
+  } catch (error : any) {
+    console.error(error);
+    res.status(500).json({error : "Failed to change role"})
+  }
+}
+export const editMessage = async (req:AuthRequest,res : Response) =>{
+  const messageId = parseInt(req.params.messageId as string)
+  const {content} = req.body;
+  const userId = req.userId!
+  try {
+    const message = await prisma.message.findUnique({where : {id : messageId}})
+  if(!message){
+    return res.status(404).json({error : "Message not found"})
+  }
+  if(message.senderId !== userId){
+    return res.status(403).json({ error: "Not allowed to edit this message" });
+  }
+  const updated = await prisma.message.update({
+    where : {id : messageId},
+    data : {content,updatedAt : new Date()}
+  })
+  res.status(200).json({msg : "Message Updated",updated})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error : "Failed to edit messages"})
+  }
+}

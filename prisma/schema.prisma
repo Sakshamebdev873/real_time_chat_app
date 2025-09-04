@@ -59,7 +59,8 @@ model Message {
   groupId      Int?
   group        Group?        @relation(fields: [groupId], references: [id])
   readReceipts MessageRead[]
-isDeleted      Boolean @default(false)
+  updatedAt    DateTime?
+  isDeleted      Boolean @default(false)
 }
 
 model MessageRead {
