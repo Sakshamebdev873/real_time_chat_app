@@ -1,7 +1,11 @@
 {
   "dependencies": {
     "@prisma/client": "^6.15.0",
+    "@types/body-parser": "^1.19.6",
+    "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "ioredis": "^5.7.0",
@@ -15,5 +19,24 @@
     "@types/jsonwebtoken": "^9.0.10",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"
-  }
+  },
+  "name": "real-time-chat-application",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sakshamebdev873/real_time_chat_app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Sakshamebdev873/real_time_chat_app/issues"
+  },
+  "homepage": "https://github.com/Sakshamebdev873/real_time_chat_app#readme"
 }
