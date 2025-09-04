@@ -17,8 +17,10 @@ datasource db {
 model User {
   id               Int           @id @default(autoincrement())
   username         String
-  email            String 
+  email            String        @unique   
   password         String
+  accesstoken      String
+  refreshToken     String
   createdAt        DateTime      @default(now())
   groups           GroupUser[]
   sentMessages     Message[]     @relation("SentMessages")

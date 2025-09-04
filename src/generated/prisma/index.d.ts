@@ -1390,6 +1390,8 @@ export namespace Prisma {
     username: string | null
     email: string | null
     password: string | null
+    accesstoken: string | null
+    refreshToken: string | null
     createdAt: Date | null
   }
 
@@ -1398,6 +1400,8 @@ export namespace Prisma {
     username: string | null
     email: string | null
     password: string | null
+    accesstoken: string | null
+    refreshToken: string | null
     createdAt: Date | null
   }
 
@@ -1406,6 +1410,8 @@ export namespace Prisma {
     username: number
     email: number
     password: number
+    accesstoken: number
+    refreshToken: number
     createdAt: number
     _all: number
   }
@@ -1424,6 +1430,8 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
+    accesstoken?: true
+    refreshToken?: true
     createdAt?: true
   }
 
@@ -1432,6 +1440,8 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
+    accesstoken?: true
+    refreshToken?: true
     createdAt?: true
   }
 
@@ -1440,6 +1450,8 @@ export namespace Prisma {
     username?: true
     email?: true
     password?: true
+    accesstoken?: true
+    refreshToken?: true
     createdAt?: true
     _all?: true
   }
@@ -1535,6 +1547,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
@@ -1562,6 +1576,8 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    accesstoken?: boolean
+    refreshToken?: boolean
     createdAt?: boolean
     groups?: boolean | User$groupsArgs<ExtArgs>
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
@@ -1575,6 +1591,8 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    accesstoken?: boolean
+    refreshToken?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1583,6 +1601,8 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    accesstoken?: boolean
+    refreshToken?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["user"]>
 
@@ -1591,10 +1611,12 @@ export namespace Prisma {
     username?: boolean
     email?: boolean
     password?: boolean
+    accesstoken?: boolean
+    refreshToken?: boolean
     createdAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "password" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "password" | "accesstoken" | "refreshToken" | "createdAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     groups?: boolean | User$groupsArgs<ExtArgs>
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
@@ -1618,6 +1640,8 @@ export namespace Prisma {
       username: string
       email: string
       password: string
+      accesstoken: string
+      refreshToken: string
       createdAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -2050,6 +2074,8 @@ export namespace Prisma {
     readonly username: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly accesstoken: FieldRef<"User", 'String'>
+    readonly refreshToken: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
   }
     
@@ -7069,6 +7095,8 @@ export namespace Prisma {
     username: 'username',
     email: 'email',
     password: 'password',
+    accesstoken: 'accesstoken',
+    refreshToken: 'refreshToken',
     createdAt: 'createdAt'
   };
 
@@ -7226,6 +7254,8 @@ export namespace Prisma {
     username?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    accesstoken?: StringFilter<"User"> | string
+    refreshToken?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     groups?: GroupUserListRelationFilter
     sentMessages?: MessageListRelationFilter
@@ -7238,6 +7268,8 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    accesstoken?: SortOrder
+    refreshToken?: SortOrder
     createdAt?: SortOrder
     groups?: GroupUserOrderByRelationAggregateInput
     sentMessages?: MessageOrderByRelationAggregateInput
@@ -7247,24 +7279,28 @@ export namespace Prisma {
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     username?: StringFilter<"User"> | string
-    email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    accesstoken?: StringFilter<"User"> | string
+    refreshToken?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     groups?: GroupUserListRelationFilter
     sentMessages?: MessageListRelationFilter
     receivedMessages?: MessageListRelationFilter
     readReceipts?: MessageReadListRelationFilter
-  }, "id">
+  }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    accesstoken?: SortOrder
+    refreshToken?: SortOrder
     createdAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
@@ -7281,6 +7317,8 @@ export namespace Prisma {
     username?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
+    accesstoken?: StringWithAggregatesFilter<"User"> | string
+    refreshToken?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -7520,6 +7558,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
@@ -7532,6 +7572,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -7543,6 +7585,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
@@ -7555,6 +7599,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -7567,6 +7613,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
   }
 
@@ -7574,6 +7622,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7582,6 +7632,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7853,6 +7905,8 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    accesstoken?: SortOrder
+    refreshToken?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7865,6 +7919,8 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    accesstoken?: SortOrder
+    refreshToken?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -7873,6 +7929,8 @@ export namespace Prisma {
     username?: SortOrder
     email?: SortOrder
     password?: SortOrder
+    accesstoken?: SortOrder
+    refreshToken?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -8989,6 +9047,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
@@ -9000,6 +9060,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
@@ -9044,6 +9106,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
@@ -9055,6 +9119,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
@@ -9089,6 +9155,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserCreateNestedManyWithoutUserInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
@@ -9100,6 +9168,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserUncheckedCreateNestedManyWithoutUserInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
@@ -9115,6 +9185,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
@@ -9126,6 +9198,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -9191,6 +9265,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUpdateManyWithoutUserNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
@@ -9202,6 +9278,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUncheckedUpdateManyWithoutUserNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
@@ -9223,6 +9301,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
@@ -9234,6 +9314,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -9306,6 +9388,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserCreateNestedManyWithoutUserInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
@@ -9317,6 +9401,8 @@ export namespace Prisma {
     username: string
     email: string
     password: string
+    accesstoken: string
+    refreshToken: string
     createdAt?: Date | string
     groups?: GroupUserUncheckedCreateNestedManyWithoutUserInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -9371,6 +9457,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
@@ -9382,6 +9470,8 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    accesstoken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     groups?: GroupUserUncheckedUpdateManyWithoutUserNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
