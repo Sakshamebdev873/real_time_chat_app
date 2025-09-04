@@ -23,9 +23,11 @@ export const register = async (
   if (!username || !email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
-
+  if (typeof password !== "string") {
+    return res.status(400).json({ error: "Password must be a string" });
+  }
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = (await bcrypt.hash(password, 10)) as string;
 
     const user = await prisma.user.create({
       data: {
@@ -45,11 +47,11 @@ export const register = async (
     });
   } catch (error: any) {
     if (error.code === "P2002") {
-      return res
-        .status(400)
-        .json({ error: "Username or Email already taken" });
+      return res.status(400).json({ error: "Username or Email already taken" });
     }
-    res.status(500).json({ error: "Something went wrong" });
+    console.log(error);
+
+    res.status(500).json({ msg: "Something went wrong", error });
   }
 };
 
@@ -60,7 +62,9 @@ export const login = async (req: Request, res: Response) => {
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password required" });
   }
-
+  if (typeof password !== "string") {
+    return res.status(400).json({ error: "password must be string" });
+  }
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) return res.status(400).json({ error: "Invalid Email Id" });
 
@@ -93,7 +97,9 @@ export const logout = async (req: Request, res: Response) => {
   const { userId } = req.body; // provide userId in request body for logout
 
   if (!userId) return res.status(400).json({ msg: "Invalid user" });
-
+  if (typeof userId !== "number") {
+    return res.status(400).json({ msg: "user id must be number..." });
+  }
   try {
     await prisma.user.update({
       where: { id: userId },

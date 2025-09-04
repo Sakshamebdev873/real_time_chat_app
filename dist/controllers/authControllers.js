@@ -9,6 +9,9 @@ export const register = async (req, res) => {
     if (!username || !email || !password) {
         return res.status(400).json({ error: "All fields are required" });
     }
+    if (typeof password !== "string") {
+        return res.status(400).json({ error: "Password must be a string" });
+    }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await prisma.user.create({
@@ -33,7 +36,8 @@ export const register = async (req, res) => {
                 .status(400)
                 .json({ error: "Username or Email already taken" });
         }
-        res.status(500).json({ error: "Something went wrong" });
+        console.log(error);
+        res.status(500).json({ msg: "Something went wrong", error });
     }
 };
 // ------------------ LOGIN ------------------
@@ -41,6 +45,9 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).json({ error: "Email and password required" });
+    }
+    if (typeof password !== "string") {
+        return res.status(400).json({ error: "password must be string" });
     }
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user)

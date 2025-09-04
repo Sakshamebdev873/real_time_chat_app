@@ -11,6 +11,7 @@ export const authMiddleware = async (
   if (!header) {
     return res.status(401).json({ msg: "No token provided" });
   }
+  // Put Bearer first before putting accesss token
   const token = header.split(" ")[1] as string ;
   try {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
