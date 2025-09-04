@@ -3,7 +3,7 @@ import { getChat, getGroupMessages, sendGroupMessages, sendMessage } from '../co
 
 
 const router = Router()
-router.get("/chat/:userId",getChat)
+router.get("/chat/:userId",getChat as any)
 router.post('/chat/:userId',sendMessage)
 router.get("/groupChat/:groupId",getGroupMessages)
 router.post("/groupChat/:groupId",sendGroupMessages)
