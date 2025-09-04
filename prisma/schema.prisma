@@ -15,52 +15,58 @@ datasource db {
 }
 
 model User {
-  id Int    @id @default(autoincrement()) 
-  username String
-  password String
-  createdAt DateTime @default(now())
-  groups GroupUser[]
-  sentMessages Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  id               Int           @id @default(autoincrement())
+  username         String
+  password         String
+  createdAt        DateTime      @default(now())
+  groups           GroupUser[]
+  sentMessages     Message[]     @relation("SentMessages")
+  receivedMessages Message[]     @relation("ReceivedMessages")
+  readReceipts     MessageRead[]
+}
+
+model Group {
+  id        Int         @id @default(autoincrement())
+  name      String
+  createdAt DateTime    @default(now())
+  users     GroupUser[]
+  messages  Message[]
+}
+
+model GroupUser {
+  id      Int       @id @default(autoincrement())
+  userId  Int
+  groupId Int
+  role    GroupRole @default(MEMBER)
+  user    User      @relation(fields: [userId], references: [id])
+  group   Group     @relation(fields: [groupId], references: [id])
+}
+
+model Message {
+  id           Int           @id @default(autoincrement())
+  content      String
+  createdAt    DateTime      @default(now())
+  senderId     Int
+  sender       User          @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId   Int?
+  receiver     User?         @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  groupId      Int?
+  group        Group?        @relation(fields: [groupId], references: [id])
   readReceipts MessageRead[]
 }
-model Group {
-  id Int @id @default(autoincrement())
-  name String
-  createdAt DateTime @default(now())
-  users GroupUser[]
-  messages Message[]
-}
-model GroupUser {
-  id Int @id @default(autoincrement())
-  userId Int
-  groupId Int
-  role GroupRole @default(MEMBER)
-  user User @relation(fields:[userId],references: [id])
-  group Group @relation(fields : [groupId],references: [id])
-}
-model Message {
-  id Int @id @default(autoincrement())
-  content String
-  createdAt DateTime @default(now())
-  senderId Int
-  sender User @relation("SentMessages",fields: [senderId],references: [id])
-  receiverId Int?
-  receiver User? @relation("ReceivedMessages",fields: [receiverId],references: [id])
-groupId Int?
-group Group? @relation(fields: [groupId],references: [id])
-readReceipts MessageRead[]
-}
-model MessageRead{
-  id Int @id @default(autoincrement())
+
+model MessageRead {
+  id        Int      @id @default(autoincrement())
   messageId Int
-  userId Int
-  readAt DateTime @default(now())
-  message Message @relation(fields: [messageId],references: [id])
-  user User @relation(fields: [userId],references: [id])
-  @@unique([messageId,userId])
+  userId    Int
+  readAt    DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId])
 }
-enum GroupRole{
+
+enum GroupRole {
   ADMIN
   MEMBER
 }
