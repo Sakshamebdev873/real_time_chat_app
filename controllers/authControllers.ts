@@ -1,6 +1,6 @@
 // controllers/authController.ts
 import bcrypt from "bcrypt";
-import { PrismaClient } from "../src/generated/prisma/client.js";
+import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
 import generateToken from "../libs/generateToken.js";
 import jwt from "jsonwebtoken";
