@@ -13,7 +13,7 @@ export const register = async (req, res) => {
         return res.status(400).json({ error: "Password must be a string" });
     }
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = (await bcrypt.hash(password, 10));
         const user = await prisma.user.create({
             data: {
                 username,
@@ -32,9 +32,7 @@ export const register = async (req, res) => {
     }
     catch (error) {
         if (error.code === "P2002") {
-            return res
-                .status(400)
-                .json({ error: "Username or Email already taken" });
+            return res.status(400).json({ error: "Username or Email already taken" });
         }
         console.log(error);
         res.status(500).json({ msg: "Something went wrong", error });
@@ -78,6 +76,9 @@ export const logout = async (req, res) => {
     const { userId } = req.body; // provide userId in request body for logout
     if (!userId)
         return res.status(400).json({ msg: "Invalid user" });
+    if (typeof userId !== "number") {
+        return res.status(400).json({ msg: "user id must be number..." });
+    }
     try {
         await prisma.user.update({
             where: { id: userId },

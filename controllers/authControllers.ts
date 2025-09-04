@@ -117,7 +117,9 @@ export const refresh = async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
   if (!refreshToken)
     return res.status(401).json({ msg: "No refresh token provided" });
-
+  if (typeof refreshToken !== "string") {
+    return res.status(400).json({ msg: "refresh token must be string..." });
+  }
   try {
     const decoded: any = jwt.verify(
       refreshToken,
