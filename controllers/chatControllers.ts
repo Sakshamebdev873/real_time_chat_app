@@ -62,6 +62,9 @@ export const sendGroupMessages = async (req: Request, res: Response) => {
   const groupId = parseInt(req.params.groupId as string);
   const senderId = parseInt(req.userId as string);
   const { content } = req.body;
+  if(!content || content.trim() === ""){
+    return res.status(400).json({msg: "Message cannot be empty"})
+  }
   try {
     const memberShip = await prisma.groupUser.findUnique({
       where: {
@@ -140,6 +143,7 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
   const messageId = parseInt(req.params.messageId as string);
   const userId = req.userId!;
   try {
+
     const message = await prisma.message.findUnique({
       where: { id: messageId },
     });
@@ -253,3 +257,61 @@ export const editMessage = async (req:AuthRequest,res : Response) =>{
     res.status(500).json({error : "Failed to edit messages"})
   }
 }
+export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
+  const groupId = parseInt(req.params.groupId as string);
+  const userId = req.userId!;
+  const messageId = parseInt(req.params.messageId as string);
+
+  try {
+    // 1. Check if group exists
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+    });
+
+    if (!group) {
+      return res.status(400).json({ msg: "Invalid GroupId" });
+    }
+
+    // 2. Check if group is deleted
+    if (group.isDeleted) {
+      return res
+        .status(403)
+        .json({ msg: "You cannot delete messages from a deleted group" });
+    }
+
+    // 3. Check if the message exists and belongs to this group
+    const message = await prisma.message.findUnique({
+      where: { id: messageId },
+    });
+
+    if (!message || message.groupId !== groupId) {
+      return res.status(404).json({ msg: "Message not found in this group" });
+    }
+
+    // 4. Authorization: Allow delete only if user is message sender or group admin
+    const groupUser = await prisma.groupUser.findFirst({
+  where: { groupId, userId },
+});
+
+
+    const isAdmin = groupUser?.role === "ADMIN";
+    const isMessageOwner = message.senderId === userId;
+
+    if (!isAdmin && !isMessageOwner) {
+      return res
+        .status(403)
+        .json({ msg: "You are not authorized to delete this message" });
+    }
+
+    // 5. Soft delete message
+    await prisma.message.update({
+      where: { id: messageId },
+      data: { isDeleted: true },
+    });
+
+    return res.status(200).json({ msg: "Group message deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Failed to delete the message" });
+  }
+};
