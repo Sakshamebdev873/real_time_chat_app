@@ -12,4 +12,5 @@ export declare const removeUserFromGroup: (req: AuthRequest, res: Response) => P
 export declare const leaveGroup: (req: AuthRequest, res: Response) => Promise<void>;
 export declare const changeUserRole: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>> | undefined>;
 export declare const editMessage: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>> | undefined>;
+export declare const deleteGroupMessage: (req: AuthRequest, res: Response) => Promise<Response<any, Record<string, any>>>;
 //# sourceMappingURL=chatControllers.d.ts.map
