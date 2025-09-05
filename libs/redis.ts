@@ -12,7 +12,7 @@ redis.on("error", (err) => console.error("Redis Client error", err));
 export const subscriber = redis.duplicate();
 export const publisher = redis.duplicate();
 
-async () => {
+(async () => {
   await subscriber.connect();
   await publisher.connect();
-}();
+})();
