@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { GroupRole, PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
 import type { AuthRequest } from "../types/types.js";
 
@@ -92,6 +92,7 @@ export const sendGroupMessages = async (req: Request, res: Response) => {
 export const createGroup = async (req: AuthRequest, res: Response) => {
   const { name, description, memberIds } = req.body;
   const creatorId = req.userId!;
+  const safeMemberIds: number[] = Array.isArray(memberIds) ? memberIds : [];
   try {
     const group = await prisma.group.create({
       data: {
@@ -99,8 +100,8 @@ export const createGroup = async (req: AuthRequest, res: Response) => {
         description,
         users: {
           create: [
-            { userId: creatorId, role: "ADMIN" },
-            ...memberIds.map((id: number) => ({ userId: id, role: "MEMBER" })),
+            { userId: creatorId, role: GroupRole.ADMIN  },
+            ...safeMemberIds.map((id: number) => ({ userId: id, role: GroupRole.MEMBER  })),
           ],
         },
       },
@@ -134,6 +135,7 @@ export const deleteGroup = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Failed to delete group" });
   }
 };
+// need fixing
 export const deleteMessage = async (req: AuthRequest, res: Response) => {
   const messageId = parseInt(req.params.messageId as string);
   const userId = req.userId!;
