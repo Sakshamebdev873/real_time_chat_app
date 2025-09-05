@@ -213,6 +213,9 @@ export const changeUserRole = async (req, res) => {
     const targetUserId = parseInt(req.params.userId);
     const { role } = req.body;
     try {
+        if (targetUserId === userId) {
+            return res.status(400).json({ msg: "Admin can change other's role not itself..." });
+        }
         const memberShip = await prisma.groupUser.findFirst({ where: { groupId, userId } });
         if (!memberShip || memberShip.role !== "ADMIN") {
             return res.status(403).json({ error: "Only admins can change roles" });

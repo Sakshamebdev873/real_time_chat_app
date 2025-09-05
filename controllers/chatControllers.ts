@@ -207,12 +207,16 @@ export const leaveGroup = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Failed to leave group" });
   }
 };
+// memeber already member role need error handling
 export const changeUserRole = async (req:AuthRequest,res : Response) =>{
   const groupId = parseInt(req.params.groupId as string)
   const userId = req.userId!
   const targetUserId = parseInt(req.params.userId as string)
   const {role} = req.body
   try {
+    if(targetUserId === userId ){
+      return res.status(400).json({msg:"Admin can change other's role not itself..."})
+    }
     const memberShip = await prisma.groupUser.findFirst({where : {groupId,userId}})
   if(!memberShip || memberShip.role !== "ADMIN"){
     return res.status(403).json({error : "Only admins can change roles"})
