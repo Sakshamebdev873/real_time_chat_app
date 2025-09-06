@@ -19,7 +19,7 @@ const server = http.createServer(app);
 const io = initSocket(server);
 (async () => {
     await initKafka();
-    await consumer.subscribe({ topic: "chat-messages" });
+    await consumer.subscribe({ topic: "chat-messages", fromBeginning: false });
     await consumer.run({
         eachMessage: async ({ message }) => {
             const data = JSON.parse(message.value.toString());
