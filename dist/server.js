@@ -6,26 +6,24 @@ import http from "http";
 import chatRouter from "./routes/chatRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 import { initSocket } from "./libs/socket.js";
-import { consumer, initKafka } from "./libs/kafka.js";
-import { publisher } from "./libs/redis.js";
+import { publisher, subscriber } from "./libs/redis.js";
 const app = express();
 const port = process.env.PORT || 5101;
 app.use(cors());
 app.use(bodyParser.json());
-// router
+// routers
 app.use("/api/v1", authRouter);
 app.use("/api/v1", authMiddleware, chatRouter);
 const server = http.createServer(app);
 const io = initSocket(server);
+// 🔥 Redis pub/sub integration
 (async () => {
-    await initKafka();
-    await consumer.subscribe({ topic: "chat-messages", fromBeginning: false });
-    await consumer.run({
-        eachMessage: async ({ message }) => {
-            const data = JSON.parse(message.value.toString());
-            console.log("Consumed from Kafka", data);
-            await publisher.publish("chat-channel", JSON.stringify(data));
-        },
+    // subscribe to the redis channel
+    await subscriber.subscribe("chat-channel", (message) => {
+        const data = JSON.parse(message);
+        console.log("Consumed from Redis", data);
+        // broadcast message via socket.io
+        io.to(data.receiverId?.toString() || "").emit("chat-message", data);
     });
 })();
 const start = async () => {

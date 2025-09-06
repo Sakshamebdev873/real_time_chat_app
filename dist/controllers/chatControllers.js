@@ -1,5 +1,5 @@
 import { GroupRole, PrismaClient } from "@prisma/client";
-import { producer } from "../libs/kafka.js";
+import { publisher } from "../libs/redis.js";
 const prisma = new PrismaClient();
 export const getChat = async (req, res) => {
     const userId = req.userId;
@@ -39,20 +39,12 @@ export const sendMessage = async (req, res) => {
         const message = await prisma.message.create({
             data: { senderId: senderId, receiverId, content },
         });
-        await producer.send({
-            topic: "chat-messages",
-            messages: [
-                {
-                    key: "message",
-                    value: JSON.stringify({
-                        senderId,
-                        receiverId,
-                        content,
-                        messageId: message.id,
-                    }),
-                },
-            ],
-        });
+        await publisher.publish("chat-channel", JSON.stringify({
+            senderId,
+            receiverId,
+            content,
+            messageId: message.id,
+        }));
         res.status(201).json({ message });
     }
     catch (error) {
