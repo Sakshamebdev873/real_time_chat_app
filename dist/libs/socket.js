@@ -1,31 +1,51 @@
 import { Server } from "socket.io";
-import { subscriber } from "./redis.js";
-export const initSocket = (server) => {
-    const io = new Server(server, {
-        cors: { origin: "*" },
-    });
-    const onlineUsers = new Map();
-    io.on("connection", (socket) => {
-        console.log("User Connected", socket.id);
-        socket.on("register", (userId) => {
-            onlineUsers.set(userId, socket.id);
+import http from "http";
+class SocketService {
+    static instance;
+    io;
+    onlineUsers; // userId → socketId
+    constructor(server) {
+        this.io = new Server(server, {
+            cors: { origin: "*" },
         });
-        socket.on("disconnect", () => {
-            console.log("User disconnected", socket.id);
-            for (const [uid, sid] of onlineUsers.entries()) {
-                if (sid === socket.id) {
-                    onlineUsers.delete(uid);
+        this.onlineUsers = new Map();
+        this.io.on("connection", (socket) => {
+            console.log("User Connected:", socket.id);
+            // when user registers, map userId → socketId
+            socket.on("register", (userId) => {
+                this.onlineUsers.set(userId, socket.id);
+                this.io.emit("userOnline", { userId });
+            });
+            socket.on("disconnect", () => {
+                console.log("User Disconnected:", socket.id);
+                for (const [uid, sid] of this.onlineUsers.entries()) {
+                    if (sid === socket.id) {
+                        this.onlineUsers.delete(uid);
+                        this.io.emit("userOffline", { userId: uid });
+                    }
                 }
-            }
+            });
         });
-    });
-    subscriber.subscribe("chat-channel", (message) => {
-        const data = JSON.parse(message);
-        const socketId = onlineUsers.get(data.receiverId);
-        if (socketId) {
-            io.to(socketId).emit("newMessage", data);
+    }
+    // Singleton instance getter
+    static getInstance(server) {
+        if (!SocketService.instance) {
+            if (!server) {
+                throw new Error("SocketService requires a server on first init");
+            }
+            SocketService.instance = new SocketService(server);
         }
-    });
-    return io;
-};
+        return SocketService.instance;
+    }
+    getSocket() {
+        return this.io;
+    }
+    getOnlineUsers() {
+        return this.onlineUsers;
+    }
+    getSocketId(userId) {
+        return this.onlineUsers.get(userId);
+    }
+}
+export default SocketService;
 //# sourceMappingURL=socket.js.map

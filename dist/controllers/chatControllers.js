@@ -40,10 +40,12 @@ export const sendMessage = async (req, res) => {
             data: { senderId: senderId, receiverId, content },
         });
         await publisher.publish("chat-channel", JSON.stringify({
+            type: "private",
             senderId,
             receiverId,
             content,
             messageId: message.id,
+            createdAt: message.createdAt,
         }));
         res.status(201).json({ message });
     }
@@ -92,6 +94,14 @@ export const sendGroupMessages = async (req, res) => {
                 content,
             },
         });
+        await publisher.publish("chat-channel", JSON.stringify({
+            type: "group",
+            groupId,
+            senderId,
+            content,
+            messageId: message.id,
+            createdAt: message.createdAt,
+        }));
         res.status(200).json({ msg: "Success", message });
     }
     catch (error) {
@@ -329,5 +339,12 @@ export const deleteGroupMessage = async (req, res) => {
         console.log(error);
         return res.status(500).json({ msg: "Failed to delete the message" });
     }
+};
+export const getGroupMembers = async (groupId) => {
+    const members = await prisma.groupUser.findMany({
+        where: { groupId },
+        select: { userId: true }
+    });
+    return members.map((member) => member.userId);
 };
 //# sourceMappingURL=chatControllers.js.map

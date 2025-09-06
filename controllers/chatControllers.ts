@@ -45,15 +45,17 @@ export const sendMessage = async (req: Request, res: Response) => {
     const message = await prisma.message.create({
       data: { senderId: senderId as number, receiverId, content },
     });
-    await publisher.publish(
-      "chat-channel",
-      JSON.stringify({
-        senderId,
-        receiverId,
-        content,
-        messageId: message.id,
-      })
-    );
+   await publisher.publish(
+  "chat-channel",
+  JSON.stringify({
+    type: "private",
+    senderId,
+    receiverId,
+    content,
+    messageId: message.id,
+    createdAt: message.createdAt,
+  })
+);
 
 
     res.status(201).json({ message });
@@ -103,6 +105,17 @@ export const sendGroupMessages = async (req: Request, res: Response) => {
         content,
       },
     });
+    await publisher.publish(
+      "chat-channel",
+      JSON.stringify({
+        type: "group",
+        groupId,
+        senderId,
+        content,
+        messageId: message.id,
+        createdAt: message.createdAt,
+      })
+    );
     res.status(200).json({ msg: "Success", message });
   } catch (error: any) {
     console.log(error);
@@ -342,3 +355,10 @@ export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({ msg: "Failed to delete the message" });
   }
 };
+export const getGroupMembers = async (groupId : number) : Promise<number[] >=>{
+const members = await prisma.groupUser.findMany({
+  where : {groupId},
+  select : {userId : true}
+})
+return members.map((member) => member.userId)
+}
