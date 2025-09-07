@@ -3,6 +3,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from '../src/pages/Homepage';
 import AuthPage from '../src/pages/AuthPage';
+import FeaturesPage from './pages/FeaturePage';
+import PricingPage from './pages/PricingPage'
+import ContactPage from './pages/ContactPage';
 
 function App() {
   return (
@@ -10,7 +13,9 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/auth" element={<AuthPage />} /> 
-        {/* Or name the route /login, /signup, etc. */}
+          <Route path="/features" element={<FeaturesPage />} /> {/* <-- Add this */}
+        <Route path="/pricing" element={<PricingPage />} />   {/* <-- Add this */}
+        <Route path="/contact" element={<ContactPage />} />   {/* <-- Add this */}
       </Routes>
     </Router>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+// import { Route } from 'react-router';
 
 const Header: React.FC = () => {
   return (
@@ -9,9 +10,9 @@ const Header: React.FC = () => {
           ConnectSphere
         </h1>
         <div className="hidden md:flex items-center space-x-8">
-          <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Features</a>
-          <a href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Pricing</a>
-          <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+          <a href='/features' className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Features</a>
+          <a href='/pricing' className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Pricing</a>
+          <a href='/contact' className="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
         </div>
         <motion.a
           href="/auth"
