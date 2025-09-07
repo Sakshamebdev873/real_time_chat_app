@@ -13,6 +13,7 @@ const Sidebar: React.FC = () => {
       if(response){
         toast.success("Succesfully Logged Out.....")
       }
+      localStorage.removeItem("accesstoken")
 navigate('/')
     } catch (error) {
       console.log(error);
