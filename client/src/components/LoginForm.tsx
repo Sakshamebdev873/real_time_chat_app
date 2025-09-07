@@ -60,14 +60,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitch }) => {
     const toastId = toast.loading("Logging in...");
 
     try {
-      const response = await customFetch.post('/login', login); // Assuming a '/auth/login' endpoint
+      const {data} = await customFetch.post('/login', login); // Assuming a '/auth/login' endpoint
       
       toast.success("You've logged in successfully!", { id: toastId });
-      
+      const { accessToken,user} = data
+
       // 2. Navigate ONLY after the login is successful
+      localStorage.setItem("accesstoken",accessToken)
       setTimeout(() => {
-        navigate('/'); 
+        navigate('/chat'); 
       }, 1000);
+console.log(user);
 
     } catch (error: any) {
       // Show a more specific error message from the backend if available

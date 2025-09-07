@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import http from "http";
+import morgan from 'morgan';
 import authRouter from "./routes/authRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -12,6 +13,7 @@ const app = express();
 const port = process.env.PORT || 5101;
 app.use(cors());
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 // Routers
 app.use("/api/v1", authRouter);
 app.use("/api/v1", authMiddleware, chatRouter);

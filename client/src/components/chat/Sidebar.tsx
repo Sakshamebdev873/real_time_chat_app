@@ -1,9 +1,24 @@
 import React from 'react';
 import { MessageSquare, Users, Settings, LogOut } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import customFetch from '../../libs/customFetch';
+import toast from 'react-hot-toast';
 const Sidebar: React.FC = () => {
   const linkClasses = "p-3 text-gray-500 hover:bg-gray-100 rounded-xl";
   const activeLinkClasses = "p-3 bg-blue-100 text-blue-600 rounded-xl";
+  const navigate = useNavigate()
+  const handleClick = async () =>{
+    try {
+      const response = await customFetch.post('/logout')
+      if(response){
+        toast.success("Succesfully Logged Out.....")
+      }
+navigate('/')
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to Logged out. Try again later....")
+    }
+  }
   return (
     <div className="bg-white border-r border-gray-200 flex flex-col justify-between items-center py-6">
       <div className="text-blue-600">
@@ -22,7 +37,7 @@ const Sidebar: React.FC = () => {
         </NavLink >
       </nav>
       <div className="flex flex-col items-center gap-4">
-        <button className="text-gray-500 hover:text-red-500">
+        <button onClick={handleClick} className="text-gray-500 hover:text-red-500">
            <LogOut size={24}/>
         </button>
         <img

@@ -73,7 +73,7 @@ export const login = async (req, res) => {
 };
 // ------------------ LOGOUT ------------------
 export const logout = async (req, res) => {
-    const { userId } = req.body; // provide userId in request body for logout
+    const userId = req.userId;
     if (!userId)
         return res.status(400).json({ msg: "Invalid user" });
     if (typeof userId !== "number") {
